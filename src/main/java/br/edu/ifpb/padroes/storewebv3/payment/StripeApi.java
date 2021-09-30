@@ -3,6 +3,9 @@ package br.edu.ifpb.padroes.storewebv3.payment;
 import br.edu.ifpb.padroes.storewebv3.config.StoreConfigurationProperties;
 import br.edu.ifpb.padroes.storewebv3.domain.Order;
 import br.edu.ifpb.padroes.storewebv3.domain.Product;
+import br.edu.ifpb.padroes.storewebv3.service.MediatedService;
+import br.edu.ifpb.padroes.storewebv3.service.MediatorEvents;
+import br.edu.ifpb.padroes.storewebv3.service.OrderService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
@@ -47,5 +50,10 @@ public class StripeApi {
         return null;
     }
 
+    public void notification(MediatedService service, MediatorEvents event) {
+        if (service instanceof OrderService &&  event == MediatorEvents.PROCESS_PAYMENT) {
+            createOrder(((OrderService) service).getOrder());
+        }
+    }
 
 }
